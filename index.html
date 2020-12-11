@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Анализатор текста</title>
+    <style type="text/css">
+        div {
+            width: 50%;
+            margin: 0 auto 20px;
+            border: 2px solid green;
+            padding: 10px;
+            text-align: center;
+        }
+
+        textarea {
+            width: 80%;
+            background-color: aquamarine;
+            height: 300px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <h1> Анализатор текста </h1>
+    <textarea id="text" placeholder='Введите текст'></textarea>
+
+    <span class='checkbox-group'> <input type='checkbox' id='ch1'> <label
+            for='ch1'>Вывести количество слов</label></span><br>
+    <span class='checkbox-group'> <input type='checkbox' id='ch2'> <label for='ch2'>Вывести количество символов</label></span>
+    <br>
+    <span class='checkbox-group'> <input type='checkbox' id='ch3'> <label for='ch3'>Вывести процентое содержание символов</label></span>
+    <br>
+
+
+    <p>Статистика текста:</p>
+    <p id="res"></p>
+    <button>очистить</button>
+</div>
+<script>
+    "use strict"
+
+    let text = document.querySelector('#text');
+    let res = document.querySelector('#res');
+    let checkbox1 = document.querySelector("#ch1");
+    let checkbox2 = document.querySelector("#ch2");
+    let checkbox3 = document.querySelector("#ch3");
+    let btn = document.querySelector("button");
+
+    text.addEventListener('blur', () => {
+        let str = text.value;
+        let arr = str.split(' ');
+        let num = arr.length; //количество слов
+        let numSymbols = str.length;
+        let arr1 = str.split('');
+        let count = {};
+
+        checkbox1.addEventListener('click', func1);
+
+        function func1() {
+            if (checkbox1.checked) {
+                if (arr[0] == '') {
+                    res.innerHTML = 'В тексте 0 слов'
+                } else {
+                    res.innerHTML += '<br>' + 'Вы ввели ' + num + ' слово(-а)';
+                }
+            }
+            ;
+            checkbox1.removeEventListener('click', func1);
+        }
+
+
+        checkbox2.addEventListener('click', func2);
+
+        function func2() {
+            if (checkbox2.checked) {
+                res.innerHTML += '<br>' + 'В тексте ' + arr1.length + ' символов';
+            } else res.innerHTML += '';
+
+            checkbox2.removeEventListener('click', func2);
+        }
+
+        checkbox3.addEventListener('click', func3);
+
+        function func3() {
+            for (let elem of arr1) {
+                if (count[elem] === undefined) {
+                    count[elem] = 1;
+                } else {
+                    count[elem]++;
+                }
+
+            }
+            console.log(count);
+            if (checkbox3.checked) {//получили объект с ключами из символов и значениями их количества
+                for (let percentSymbols in count) {
+                    count[percentSymbols] = (count[percentSymbols] * 100 / numSymbols).toFixed(1); //получили процентное содержание символа
+
+                    res.innerHTML += '<br>' + percentSymbols + ': ' + count[percentSymbols] + '%';
+                }
+            } else res.innerHTML += '';
+
+            checkbox3.removeEventListener('click', func3);
+        };
+        btn.addEventListener('click', () => {
+            text.value = '';
+            res.innerHTML = '';
+            checkbox1.checked = false;
+            checkbox2.checked = false;
+            checkbox3.checked = false;
+        });
+    });
+</script>
+</body>
+</html>
